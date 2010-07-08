@@ -1,8 +1,8 @@
 require 'generator_helper'
 
-class Mongoid::Generators::ModelGeneratorTest < Rails::Generators::TestCase
+class Canable::Generators::ModelGeneratorTest < Rails::Generators::TestCase
   destination File.join(Rails.root)
-  tests Mongoid::Generators::ModelGenerator
+  tests Canable::Generators::ModelGenerator
 
   setup :prepare_destination
   setup :copy_routes
