@@ -1,0 +1,1 @@
+require_generators :canable => ['model', 'user']

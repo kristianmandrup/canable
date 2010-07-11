@@ -25,7 +25,7 @@ module Canable::Generators
     end
 
     def post_log
-      say "Your model #{model_class_name} is now Canable:Able. Please define your permission login in #{model_file_name}", :green
+      say "Your model #{model_class_name} has is now Canable:Able. Please define your permission login in #{model_file_name}", :green
     end
 
     protected
@@ -48,7 +48,7 @@ module Canable::Generators
     end
                            
     def model_file_name
-      File.join(Rails.root, "app/models/#{name}.rb")
+      "app/models/#{name}.rb"
     end
     
     def canable_include_txt

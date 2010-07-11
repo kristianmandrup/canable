@@ -1,61 +1,52 @@
 require 'rake'
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'generators/canable'
+require 'helpers/model_helper'
 
-require_generators :canable => ['model', 'user']
-
-def account_content
-%q{  class Account < Active::Record
-  end}
-end
-
-def test_if_any_files
-  files = FileList["#{::Rails.root}/**/*.rb"]
-  puts "Files in Rails app: #{files}" 
-end  
-
-def create_model_file name
-  file =  model_file_name(name)
-  unless File.exist?(file)    
-    FileUtils.mkdir_p File.dirname(file)
-    File.open(file, 'w') do |f|  
-      f.puts account_content
-    end
-  end
-end  
-
-def model_file_name name
-  File.join(::Rails.root, "app/models/#{name}.rb")
-end  
-
-def remove_model_file name
-  file = model_file_name(name)
-  FileUtils.rm_f(file) if File.exist?(file)
-end
-
-describe 'Generator' do
+describe 'model_generator' do
   
   before :each do              
+    GeneratorSpec.setup_generator 'model_generator' do
+      tests Canable::Generators::ModelGenerator
+    end
+    
     remove_model_file 'account'    
   end
-  
-  GeneratorSpec.with_generator 'Generator' do |g, c, gc|
-    gc.tests Canable::Generators::ModelGenerator
+
+  after :each do              
+    remove_model_file 'account'    
   end
     
-  it "should not work without a User mode file" do            
+  it "should not work without an Account model file" do            
     GeneratorSpec.with_generator do |g|   
+      name = 'account'
       g.run_generator %w{account}
-      g.should_not generate_file('app/models/account.rb')
+      g.should_not generate_file("app/models/#{name}.rb")
     end
   end
 
-  it "should not work without a User mode file" do            
-    GeneratorSpec.with_generator do |g|             
-      create_model_file 'account'      
-      g.run_generator %w{account}                   
-      g.should generate_file('app/models/account.rb') 
+  it "should decorate an existing Account model file with include Canable:Ables" do            
+    GeneratorSpec.with_generator do |g|  
+      name = 'account'
+      create_model_file name     
+      g.run_generator %w{account}
+      g.should generate_file("app/models/#{name}.rb") do |content|
+        content.should match /include Canable::Ables/
+      end
     end
   end
+
+  it "should decorate an Acount model file with include Canable:Ables and userstamps!" do            
+    GeneratorSpec.with_generator do |g|  
+      name = 'account'
+      create_model_file name     
+      g.run_generator %w{account --userstamps}                   
+      g.should generate_file("app/models/#{name}.rb") do |content|
+        content.should match /include Canable::Ables/
+        content.should match /userstamps!/        
+      end
+    end
+  end   
 end
 
 

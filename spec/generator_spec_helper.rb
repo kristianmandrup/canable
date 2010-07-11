@@ -53,8 +53,15 @@ end
 module GeneratorSpec
   class << self  
     attr_accessor :generator, :test_method_name
+
+    def clean!
+      if generator
+        generator.class.generator_class = nil 
+      end
+      @generator = nil
+    end
     
-    def get_generator test_method_name
+    def get_generator test_method_name=nil
       @generator ||= RSpec::Generators::TestCase.new(test_method_name + '_spec')
     end
 
@@ -77,9 +84,18 @@ module GeneratorSpec
       end
     end
 
-    def with_generator test_method_name=nil, &block
-      with(get_generator(test_method_name), &block)
+    def with_generator &block
+      with(get_generator, &block)
     end
+
+    def setup_generator test_method_name=nil, &block
+      clean! if test_method_name  
+      generator = get_generator(test_method_name)
+      if block
+        block.arity < 1 ? generator.class.instance_eval(&block) : block.call(generator.class)  
+      end
+    end
+
 
     def check_methods methods
       methods.each do |method_name|
