@@ -37,8 +37,7 @@ module RSpec
       protected
       
       def copy_routes
-        routes_file = File.join(File.dirname(__FILE__), 'fixtures', 'routes.rb')  
-        # puts "routes_file: #{routes_file}"
+        routes_file = File.join(File.dirname(__FILE__), 'fixtures', 'routes.rb')
         routes = File.expand_path(routes_file)
         destination = File.join(::Rails.root, "config")
         FileUtils.mkdir_p(destination)
@@ -96,17 +95,16 @@ module GeneratorSpec
       end
     end
 
-
     def check_methods methods
       methods.each do |method_name|
-        content.should_match /def #{method_name}_by?(user)/
+        content.should match /def #{method_name}_by?(user)/
       end
     end
     alias_method :methods, :check_methods
 
     def check_matchings matchings
       matchings.each do |matching|
-        content.should_match /#{Regexp.escape(matching)}/
+        content.should match /#{Regexp.escape(matching)}/
       end
     end
     alias_method :matchings, :check_matchings 
@@ -118,7 +116,7 @@ module GeneratorSpec
 
     def check_class_methods methods
       methods.each do |method_name|
-        content.should_match /def self.#{method_name}_by?(user)/
+        content.should match /def self.#{method_name}_by?(user)/
       end
     end
     alias_method :class_methods, :check_class_methods
@@ -126,7 +124,7 @@ module GeneratorSpec
     def check_view(folder, file_name, strings)
       generator.should generate_file("app/views/#{folder}/#{filename}") do |file_content|
         strings.each do |str|
-          content.should_match /#{Regexp.escape(str)}/
+          content.should match /#{Regexp.escape(str)}/
         end
       end
     end

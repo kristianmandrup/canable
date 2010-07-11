@@ -13,7 +13,6 @@ module RSpec::Rails
         @relative = relative      
       end
 
-      # actual is the generator
       def matches?(generator)      
         migration_file_name(relative, generator)        
       end          
