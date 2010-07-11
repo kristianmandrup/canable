@@ -2,23 +2,26 @@ module Canable::Generators
   class ModelGenerator < Rails::Generators::Base
     desc "Adds Canable::Ables permission system to Model" 
 
-    argument :name, :type => :string, :required = true, :desc => 'Name of model to make Canable:Able'
+    argument      :name,          :type => :string,   :default => 'User',   :desc => 'Name of model to make Canable:Able', :required => false
 
-    class_option :creatable,    :type => :boolean, :default => false,   :desc => 'Add creatable_by?(user) method'
-    class_option :destroyable,  :type => :boolean, :default => false,   :desc => 'Add destroyable_by?(user) method'      
-    class_option :updatable,    :type => :boolean, :default => false,   :desc => 'Add updatable_by?(user) method'
-    class_option :viewable,     :type => :boolean, :default => false,   :desc => 'Add viewable_by?(user) method'
-    class_option :userstamps,   :type => :boolean, :default => false,   :desc => 'Add user timestamps'      
+    class_option  :creatable,     :type => :boolean,  :default => false,    :desc => 'Add creatable_by?(user) method'
+    class_option  :destroyable,   :type => :boolean,  :default => false,    :desc => 'Add destroyable_by?(user) method'      
+    class_option  :updatable,     :type => :boolean,  :default => false,    :desc => 'Add updatable_by?(user) method'
+    class_option  :viewable,      :type => :boolean,  :default => false,    :desc => 'Add viewable_by?(user) method'
+    class_option  :userstamps,    :type => :boolean,  :default => false,    :desc => 'Add user timestamps'      
           
     def self.source_root
       @source_root ||= File.expand_path("../../templates", __FILE__)
     end
 
     def make_canable_able
-      model_file_txt  = File.open(model_file_name).read
-      after_txt       = find_after_txt(model_file_txt)        
-
-      inject_into_file(model_file_name, canable_include_txt, :after => after_txt) if after_txt
+      if File.exist?(model_file_name)
+        model_file_txt  = File.open(model_file_name).read
+        after_txt       = find_after_txt(model_file_txt)        
+        inject_into_file(model_file_name, canable_include_txt, :after => after_txt) if after_txt
+      else
+        say "#{model_file_name} does not exist. Please create it first before you can make it Canable:Able"
+      end
     end
 
     def post_log
@@ -62,7 +65,7 @@ include Canable::Ables
 
     def add_methods
       methods = []
-      %w{creatable, destroyable, updatable, viewable}.each do |name|
+      %w{creatable destroyable updatable viewable}.each do |name|
         method = add_method(name)
         methods << method if method
       end
@@ -70,16 +73,13 @@ include Canable::Ables
     end
     
     def add_method(name)        
+      if options[name.to_sym]
       %Q{
-def #{name}_by?(user)
-  true
-end
-}     if options[name.to_sym]
+  def #{name}_by?(user)
+    true
+  end
+}     
+      end
     end      
   end 
 end
-
-      
-
-
-

@@ -24,16 +24,19 @@ module RSpec::Rails
       end          
     
       def failure_message
-        "Expected there to be the method #{method}, but there wasn't"
+        "Expected there to be the class method #{method}, but there wasn't"
+      end
+
+      def negative_failure_message
+        "Did not expect there to be the class method #{method}, but there was"
       end
             
     end
-  end
-  
-  def have_method(method)
-    HaveClassMethod.new(method)
-  end
-  alias :have_instance_method :have_method 
+
+    def have_class_method(method)
+      HaveClassMethod.new(method)
+    end    
+  end  
 end
 
 

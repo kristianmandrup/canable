@@ -21,6 +21,10 @@ module RSpec::Rails
       def failure_message
         "Expected migration #{relative} to have been generated, but it was not"
       end
+
+      def negative_failure_message
+        "Did not expect migration #{relative} to have been generated, but it was"
+      end
       
       protected
       
@@ -31,10 +35,10 @@ module RSpec::Rails
       end
       
     end
-  end
   
-  def generate_migration(relative)
-    GenerateMigration.new(relative)
-  end
-  
+    def generate_migration(relative)
+      GenerateMigration.new(relative)
+    end
+
+  end   
 end

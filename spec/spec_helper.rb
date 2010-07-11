@@ -10,7 +10,7 @@ require 'canable'
 require 'matchers/all'
 require 'generator_spec_helper'
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.mock_with :mocha  
   config.include(RSpec::Rails::GeneratorMatchers)    
 end

@@ -2,7 +2,7 @@ module Canable::Generators
   class UserGenerator < Rails::Generators::Base
     desc "Adds Canable to User model" 
 
-    argument :name, :default => 'user', :optional = true, :desc => 'Name of user model to make Canable'
+    argument :name, :default => 'user', :optional => true, :desc => 'Name of user model to make Canable'
           
     def self.source_root
       @source_root ||= File.expand_path("../../templates", __FILE__)
