@@ -11,7 +11,7 @@ module RSpec
         end
       end  
 
-      def helper_content name
+      def controller_content name
         %Q{class #{name.camelize}Controller < ActionController::Base
         end}        
       end
