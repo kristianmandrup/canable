@@ -10,7 +10,7 @@ module RSpec::Rails
 
       def matches?(module_name)      
         @module_name = module_name
-        @content =~ /module\s+#{@module_name}(.*?)\nend/m
+        @content =~ /module\s+#{@module_name}\s+(.*)end/m
         yield $2.strip if block_given?
       end          
     

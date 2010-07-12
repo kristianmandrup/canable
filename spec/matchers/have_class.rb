@@ -10,7 +10,7 @@ module RSpec::Rails
 
       def matches?(content)      
         @content = content
-        match_res = (@content =~ /class\s+#{@klass}(.*?)\nend/m)
+        match_res = (@content =~ /class\s+#{@klass}\s+(.*)end/m)
         if block_given? && $1
           yield $1.strip 
         else

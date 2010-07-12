@@ -10,8 +10,12 @@ module RSpec::Rails
 
       def matches?(content)      
         @content = content        
-        @content =~ /include #{module_name}/
-        yield $2.strip if block_given?
+        match_res = (@content =~ /include\s+#{module_name}/)
+        if block_given? && match_res
+          yield content
+        else
+          match_res
+        end
       end          
     
       def failure_message
